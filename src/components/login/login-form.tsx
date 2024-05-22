@@ -1,12 +1,37 @@
-import Login from "@/actions/login";
+"use client";
 
-export default function LoginForm() {
+import login from "@/actions/login";
+import { useFormState, useFormStatus } from "react-dom";
+import Button from "@//components/forms/button";
+
+function FormButton() {
+  const { pending } = useFormStatus();
+
   return (
     <>
-      <form action={Login}>
+      {pending ? (
+        <Button disabled={pending}>Enviando...</Button>
+      ) : (
+        <Button disabled={pending}>Entrar</Button>
+      )}
+      ;
+    </>
+  );
+}
+
+export default function LoginForm() {
+  const [state, action] = useFormState(login, {
+    ok: false,
+    error: "",
+    data: null,
+  });
+  return (
+    <>
+      <form action={action}>
         <input type="text" name="username" placeholder="Usuário" />
         <input type="password" name="password" placeholder="Senha" />
-        <button type="submit">Entrar</button>
+        <FormButton />
+        <p>{state.error}</p>
       </form>
     </>
   );
